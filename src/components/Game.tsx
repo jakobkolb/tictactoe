@@ -1,67 +1,9 @@
 import React from 'react'
-import './index.css'
+import '../index.css'
+import Board from './board'
 
 const COLORS = { xColor: '#178fc2', oColor: '#912c1a', neutralColor: '#ffffff' }
 const SYMBOLS = { X: 'X', O: 'O' }
-
-interface SquareProps {
-  value?: string
-  textcolor?: string
-  onClick: () => void
-}
-
-const Square: React.SFC<SquareProps> = (props) => {
-  return (
-    <button
-      className="square"
-      onClick={(): void => props.onClick()}
-      style={{ color: props.textcolor }}
-    >
-      {props.value}
-    </button>
-  )
-}
-
-interface BoardProps {
-  value?: number
-  name?: string
-  squares: string[]
-  colors: string[]
-  onClick: (i: number) => void
-  xIsNext?: boolean
-}
-
-const Board: React.SFC<BoardProps> = (props: BoardProps) => {
-  const renderSquare = (i: number) => {
-    return (
-      <Square
-        value={props.squares[i]}
-        textcolor={props.colors[i]}
-        onClick={(): void => props.onClick(i)}
-      />
-    )
-  }
-
-  return (
-    <div>
-      <div className="board-row">
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
-      </div>
-      <div className="board-row">
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
-      </div>
-      <div className="board-row">
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
-      </div>
-    </div>
-  )
-}
 
 interface GameProps {
   value?: number
@@ -70,14 +12,14 @@ interface GameProps {
 
 interface GameState {
   history: {
-    squares: string[]
+    squares: (string | null)[]
     colors: string[]
     xIsNext: boolean
   }[]
   stepNumber: number
 }
 
-export const calculateWinner = (squares: string[]): string | null => {
+export const calculateWinner = (squares: (string | null)[]): string | null => {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -118,6 +60,7 @@ class Game extends React.Component<GameProps, GameState> {
     const xIsNext = current.xIsNext
     const squares = current.squares.slice()
     console.log(squares)
+    console.log(current.colors)
     if (calculateWinner(squares) || squares[i]) {
       return
     }

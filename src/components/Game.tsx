@@ -59,8 +59,6 @@ class Game extends React.Component<GameProps, GameState> {
     const current = history[history.length - 1]
     const xIsNext = current.xIsNext
     const squares = current.squares.slice()
-    console.log(squares)
-    console.log(current.colors)
     if (calculateWinner(squares) || squares[i]) {
       return
     }

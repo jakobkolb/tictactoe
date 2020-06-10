@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
-  node: circleci/node@1.1.6
+  node: circleci/node@3.0.0
+  codecov: codecov/codecov@1.1.0
 jobs:
   build-and-test:
     executor:
@@ -10,7 +11,9 @@ jobs:
       - node/with-cache:
           steps:
             - run: yarn install
-            - run: yarn test
+            - run: yarn test:ci
+            - codecov/upload:
+                file: coverage/clover.xml
   lint:
     executor:
       name: node/default
@@ -20,6 +23,7 @@ jobs:
           steps:
             - run: yarn install
             - run: yarn lint
+  
 workflows:
     build-and-test:
       jobs:

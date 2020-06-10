@@ -13,6 +13,7 @@ jobs:
             - run: yarn install
             - run: yarn test:ci
             - codecov/upload:
+                token: 45d8de48-7877-4744-bfc6-3ec34862914e
                 file: coverage/clover.xml
   lint:
     executor:

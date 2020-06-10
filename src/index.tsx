@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Game from './components/Game'
+import './App.css'
+import { Game } from './components'
 
 ReactDOM.render(<Game />, document.getElementById('root'))

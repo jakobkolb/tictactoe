@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Board should render as expected 1`] = `ShallowWrapper {}`;
-
-exports[`Game should render as expected 1`] = `ShallowWrapper {}`;
-
-exports[`Square should render as expected 1`] = `ShallowWrapper {}`;

@@ -1,5 +1,6 @@
-import { GameState } from '../components/Game'
+import { GameState, HistoryElement } from '../components/Game'
 import { PLAYERS } from 'types'
+import * as R from 'ramda'
 
 const lines = [
   [0, 1, 2],
@@ -56,5 +57,11 @@ export const jumpReducer = (
   if (action.type !== 'JUMP') {
     return state
   }
-  return { ...state, stepNumber: action.step }
+  return R.pipe<GameState, HistoryElement[], GameState>(
+    R.prop('history'),
+    R.applySpec({
+      history: R.take(action.step + 1),
+      stepNumber: R.always(action.step),
+    }),
+  )(state)
 }

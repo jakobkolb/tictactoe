@@ -8,11 +8,13 @@ interface GameProps {
   name?: string
 }
 
+export interface HistoryElement {
+  squares: (PLAYERS | null)[]
+  xIsNext: boolean
+}
+
 export interface GameState {
-  history: {
-    squares: (PLAYERS | null)[]
-    xIsNext: boolean
-  }[]
+  history: HistoryElement[]
   stepNumber: number
 }
 

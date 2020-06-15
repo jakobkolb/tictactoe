@@ -8,7 +8,6 @@ import R from 'ramda'
 describe('Game', () => {
   test('should show initialize with X as starting player and show text', () => {
     const wrapper = shallow(<Game />)
-    wrapper.setState({ xIsNext: true })
     expect(wrapper.containsMatchingElement(<div>'Next player: X'</div>))
   })
   test('should handle move with indicating next player, showing history button and marking square with symbol', () => {

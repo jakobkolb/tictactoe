@@ -31,7 +31,7 @@ describe('Reducers', () => {
   test('history', () => {
     assert.deepEqual(
       history(undefined, createInitAction()),
-      [{ squares: Array(9).fill(null), xIsNext: true }],
+      [],
       'Initial history is an array filled with null.',
     )
   })

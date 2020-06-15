@@ -1,4 +1,10 @@
-import { calculateWinner, jumpReducer, getCurrentBoardFromState } from '.'
+import {
+  calculateWinner,
+  jumpReducer,
+  getCurrentBoardFromState,
+  getCurrentBoardFromNewState,
+  xIsNext,
+} from '.'
 import { assert } from 'chai'
 import { GameState, HistoryElement } from 'components/Game'
 import { PLAYERS } from 'types'
@@ -16,71 +22,22 @@ test('calculateWinner', () => {
   )
 })
 
-test('getCurrentBoardFromState', () => {
-  const state: GameState = {
-    history: [
-      {
-        squares: [null, null, null, null, null, null, null, null, null],
-        xIsNext: true,
-      },
-      {
-        squares: [PLAYERS.X, null, null, null, null, null, null, null, null],
-        xIsNext: false,
-      },
-      {
-        squares: [
-          PLAYERS.X,
-          PLAYERS.O,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-        ],
-        xIsNext: true,
-      },
-    ],
-    stepNumber: 2,
-  }
-  assert.equal(
-    getCurrentBoardFromState(state),
-    R.pipe<GameState, HistoryElement[], HistoryElement, PLAYERS[]>(
-      R.prop('history') as (state: GameState) => HistoryElement[],
-      R.last,
-      R.prop('squares') as (ele: HistoryElement) => PLAYERS[],
-    )(state),
+test('getCurrentBoardFromNewState', () => {
+  assert.deepEqual(
+    getCurrentBoardFromNewState([]),
+    Array(9).fill(null),
     'returns squares of last history element',
+  )
+  assert.deepEqual(
+    getCurrentBoardFromNewState([0]),
+    [PLAYERS.X, null, null, null, null, null, null, null, null],
+    'mark X for first move',
   )
 })
 
 describe('jumpReducer', () => {
   const state: GameState = {
-    history: [
-      {
-        squares: [null, null, null, null, null, null, null, null, null],
-        xIsNext: true,
-      },
-      {
-        squares: [PLAYERS.X, null, null, null, null, null, null, null, null],
-        xIsNext: false,
-      },
-      {
-        squares: [
-          PLAYERS.X,
-          PLAYERS.O,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-        ],
-        xIsNext: true,
-      },
-    ],
+    history: [1, 2],
     stepNumber: 2,
   }
   test('should return new state with stepNumber according to action', () => {
@@ -93,4 +50,9 @@ describe('jumpReducer', () => {
       R.prop('history')(jumpReducer(state, { type: 'JUMP', step: 1 })),
     ).toHaveLength(2)
   })
+})
+
+test('xIsNext', () => {
+  assert.equal(xIsNext([]), true, 'X has the first move')
+  assert.equal(xIsNext([1]), false, 'O has second move')
 })

@@ -1,7 +1,12 @@
 import actions, { Action } from './actions'
 import * as R from 'ramda'
 import { GameState, HistoryElement } from 'components/Game'
-import { calculateWinner, getCurrentBoardFromState } from 'helpers'
+import {
+  calculateWinner,
+  getCurrentBoardFromState,
+  getCurrentBoardFromNewState,
+  xIsNext,
+} from 'helpers'
 import { combineReducers } from 'redux'
 import { PLAYERS } from 'types'
 
@@ -19,27 +24,15 @@ export const stepNumber: (
 }
 
 export const history: (
-  state: HistoryElement[] | undefined,
+  state: number[] | undefined,
   action: Action,
-) => HistoryElement[] = (
-  state = [{ squares: Array(9).fill(null), xIsNext: true }],
-  action,
-) => {
+) => number[] = (state = [], action) => {
   if (action.type === actions.CLICK_ON_SQUARE) {
-    const current = R.last(state)
-
-    const xIsNext = current.xIsNext
-    const squares = current.squares.slice()
+    const squares = getCurrentBoardFromNewState(state)
     if (calculateWinner(squares) || squares[action.index]) {
       return state
     }
-    squares[action.index] = xIsNext ? PLAYERS.X : PLAYERS.O
-    return state.concat([
-      {
-        squares: squares,
-        xIsNext: !xIsNext,
-      },
-    ])
+    return [...state, action.payload]
   }
   return state
 }
@@ -69,7 +62,7 @@ const reducer: (state: GameState | undefined, action: Action) => GameState = (
 }
 
 const isLegalMove = (state: GameState, squareNumber: number): boolean => {
-  const squares = getCurrentBoardFromState(state)
+  const squares = getCurrentBoardFromNewState(state.history)
   if (calculateWinner(squares) || squares[squareNumber]) {
     return false
   }

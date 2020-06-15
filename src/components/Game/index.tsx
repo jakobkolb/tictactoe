@@ -1,18 +1,23 @@
 import React from 'react'
 import { Board } from './Board'
+import * as R from 'ramda'
 import { PLAYERS } from '../../types'
+
 import { calculateWinner, clickReducer, jumpReducer } from 'helpers'
+import reducer from 'helpers/reducer'
 
 interface GameProps {
   value?: number
   name?: string
 }
 
+export interface HistoryElement {
+  squares: (PLAYERS | null)[]
+  xIsNext: boolean
+}
+
 export interface GameState {
-  history: {
-    squares: (PLAYERS | null)[]
-    xIsNext: boolean
-  }[]
+  history: HistoryElement[]
   stepNumber: number
 }
 

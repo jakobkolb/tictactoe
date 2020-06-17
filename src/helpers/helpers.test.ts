@@ -1,57 +1,112 @@
-import { calculateWinner, jumpReducer } from '.'
-import { GameState } from 'components/Game'
-import { PLAYERS } from 'types'
-import R from 'ramda'
+import { calculateWinner, isIllegalMove } from '.'
 import { assert } from 'chai'
+import { PLAYERS } from 'types'
+import actions, { createClickAction } from './actions'
+import * as errors from './errors'
+import * as R from 'ramda'
+
 test('calculateWinner', () => {
+  const X = PLAYERS.X
+  const PO = PLAYERS.O
   assert.equal(
-    calculateWinner(['X', 'X', 'X', null, 'O', 'O', null, null, null, null]),
+    calculateWinner(
+      [
+        {
+          squares: [X, X, X, null, PO, PO, null, null, null, null],
+          xIsNext: false,
+        },
+      ],
+      { type: actions.JUMP_TO_STEP },
+    ),
     'X',
     'should return winner if she has three in line',
   )
   assert.equal(
-    calculateWinner(['X', 'X', 'O', null, 'O', 'O', null, 'X', null, null]),
+    calculateWinner(
+      [
+        {
+          squares: [X, X, PO, null, PO, PO, null, X, null, null],
+          xIsNext: false,
+        },
+      ],
+      { type: actions.JUMP_TO_STEP },
+    ),
     null,
     'should return null, if noone has three in line',
   )
 })
 
-describe('jumpReducer', () => {
-  const state: GameState = {
-    history: [
+test('isLegalMove', () => {
+  assert.throws(
+    R.thunkify(isIllegalMove)(undefined, createClickAction(1)),
+    errors.ILLEGAL_STATE_ERROR,
+    'Clicking on empty state is not allowed.',
+  )
+  assert.equal(
+    isIllegalMove(
       {
-        squares: [null, null, null, null, null, null, null, null, null],
-        xIsNext: true,
-      },
-      {
-        squares: [PLAYERS.X, null, null, null, null, null, null, null, null],
-        xIsNext: false,
-      },
-      {
-        squares: [
-          PLAYERS.X,
-          PLAYERS.O,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
+        history: [
+          {
+            squares: [null, null, null, null, null, null, null, null, null],
+            xIsNext: true,
+          },
         ],
-        xIsNext: true,
       },
-    ],
-    stepNumber: 2,
-  }
-  test('should return new state with stepNumber according to action', () => {
-    expect(jumpReducer(state, { type: 'JUMP', step: 1 })).toMatchObject({
-      stepNumber: 1,
-    })
-  })
-  test('should return state that does not contain history above what is indicated by step number', () => {
-    expect(
-      R.prop('history')(jumpReducer(state, { type: 'JUMP', step: 1 })),
-    ).toHaveLength(2)
-  })
+      createClickAction(1),
+    ),
+    false,
+    'No move on empty board is invalid.',
+  )
+
+  assert.equal(
+    isIllegalMove(
+      {
+        history: [
+          {
+            squares: [
+              PLAYERS.X,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+            ],
+            xIsNext: true,
+          },
+        ],
+      },
+      createClickAction(0),
+    ),
+    true,
+    'Click on occupied square is invalid.',
+  )
+
+  assert.equal(
+    isIllegalMove(
+      {
+        history: [
+          {
+            squares: [
+              PLAYERS.X,
+              PLAYERS.X,
+              PLAYERS.X,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+            ],
+            xIsNext: true,
+          },
+        ],
+      },
+      createClickAction(5),
+    ),
+    true,
+    'Click after game is won is invalid.',
+  )
 })

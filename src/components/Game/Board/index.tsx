@@ -1,13 +1,13 @@
 import React from 'react'
 import { Square } from './Square'
-import { PLAYERS } from 'types'
+import { Board } from 'types'
 
 interface BoardProps {
-  squares: (PLAYERS | null)[]
+  squares: Board
   onClick: (i: number) => void
 }
 
-export const Board: React.SFC<BoardProps> = (props: BoardProps) => {
+export const GameBoard: React.SFC<BoardProps> = (props: BoardProps) => {
   const renderSquare = (i: number) => {
     return (
       <Square

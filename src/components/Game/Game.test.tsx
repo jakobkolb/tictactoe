@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow, mount, ReactWrapper } from 'enzyme'
 import { Game } from './'
-import { Board } from './Board'
+import { GameBoard } from './Board'
 import { Square } from './Board/Square'
 import R from 'ramda'
 
@@ -63,7 +63,7 @@ describe('Game', () => {
 
 const generateClickInGameAtSquare = R.curry(
   (game: ReactWrapper, squareIndex: number): void => {
-    game.find(Board).find(Square).at(squareIndex).simulate('click')
+    game.find(GameBoard).find(Square).at(squareIndex).simulate('click')
   },
 )
 
@@ -75,4 +75,4 @@ const generateClicksAt = (
 const getTextFromGameAtSqureIndex = (
   game: ReactWrapper,
   squareIndex: number,
-): string => game.find(Board).find(Square).at(squareIndex).text()
+): string => game.find(GameBoard).find(Square).at(squareIndex).text()

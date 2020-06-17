@@ -1,6 +1,8 @@
-import { GameState, HistoryElement } from '../components/Game'
-import { PLAYERS } from 'types'
+import { GameState, HistoryElement, Board, History, PLAYERS } from 'types'
 import * as R from 'ramda'
+import { Action } from './actions'
+import { getCurrentBoardFromHistory } from './selectors'
+import * as errors from './errors'
 
 const lines = [
   [0, 1, 2],
@@ -13,7 +15,14 @@ const lines = [
   [2, 4, 6],
 ]
 
-export const calculateWinner = (squares: (string | null)[]): string | null => {
+export const calculateWinner = (
+  state: History,
+  action?: Action,
+): string | null => {
+  const squares = R.pipe<History, HistoryElement, Board>(
+    R.last,
+    R.prop('squares'),
+  )(state)
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i]
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
@@ -23,45 +32,38 @@ export const calculateWinner = (squares: (string | null)[]): string | null => {
   return null
 }
 
-export const clickReducer = (
-  state: GameState,
-  action: { type: string; index: number },
-): GameState => {
-  if (action.type !== 'CLICK') {
-    return state
-  }
-  const stepNumber = state.stepNumber
-  const history = state.history.slice(0, stepNumber + 1)
-  const current = history[history.length - 1]
-  const xIsNext = current.xIsNext
-  const squares = current.squares.slice()
-  if (calculateWinner(squares) || squares[action.index]) {
-    return state
-  }
-  squares[action.index] = xIsNext ? PLAYERS.X : PLAYERS.O
-  return {
-    history: history.concat([
-      {
-        squares: squares,
-        xIsNext: !xIsNext,
-      },
-    ]),
-    stepNumber: history.length,
-  }
-}
+const getSquareStatus: (
+  state: History,
+  boardIndex: number,
+) => PLAYERS | null = R.useWith(R.flip(R.prop), [
+  getCurrentBoardFromHistory,
+  R.identity,
+])
 
-export const jumpReducer = (
-  state: GameState,
-  action: { type: string; step: number },
-): GameState => {
-  if (action.type !== 'JUMP') {
-    return state
-  }
-  return R.pipe<GameState, HistoryElement[], GameState>(
-    R.prop('history'),
-    R.applySpec({
-      history: R.take(action.step + 1),
-      stepNumber: R.always(action.step),
-    }),
-  )(state)
-}
+const squareIsOccupied: (
+  state: History,
+  boardIndex: number,
+) => boolean = R.pipe(getSquareStatus, R.not, R.not)
+
+const gameIsWon: (state: History, boardIndex: number) => boolean = R.pipe(
+  calculateWinner,
+  R.not,
+  R.not,
+)
+
+export const isIllegalMoveOnHistory: (
+  state: History,
+  boardIndex: number,
+) => boolean = R.anyPass([
+  gameIsWon as R.SafePred<number | History>,
+  squareIsOccupied as R.SafePred<number | History>,
+])
+
+export const isIllegalMove: (
+  state: GameState | undefined,
+  action: Action,
+) => boolean = R.ifElse(
+  R.isNil,
+  errors.throwIllegalStateError,
+  R.useWith(isIllegalMoveOnHistory, [R.prop('history'), R.prop('payload')]),
+)

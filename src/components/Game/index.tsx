@@ -1,70 +1,29 @@
 import React from 'react'
 import { GameBoard } from './Board'
 import * as R from 'ramda'
-import { PLAYERS, GameState, Board, History } from 'types'
+import { GameState, Board, History } from 'types'
 
-import { calculateWinner } from 'helpers'
-import reducer from 'helpers/reducer'
+import { getStatus } from 'helpers'
 import * as selectors from 'helpers/selectors'
 import * as actions from 'helpers/actions'
+import { connect } from 'react-redux'
 
-export class Game extends React.Component<{}, GameState> {
-  constructor(props: any) {
-    super(props)
-    this.state = {
-      history: [
-        {
-          squares: Array(9).fill(null),
-          xIsNext: true,
-        },
-      ],
-      stepNumber: 0,
-    }
-  }
+const makeMove = (dispatch: any) => (boardIndex: number): void =>
+  dispatch(actions.createClickAction(boardIndex))
 
-  dispatch = (action: actions.Action): void => {
-    R.pipe(reducer, this.setState.bind(this))(this.state, action)
-  }
+const jumpTo = (dispatch: any) => (step: number): void =>
+  dispatch(actions.createJumpAction(step))
 
-  makeMove = (boardIndex: number): void =>
-    this.dispatch(actions.createClickAction(boardIndex))
+const mapDispatchToProps: (dispatch: any) => DispatchProps = R.applySpec({
+  makeMove: makeMove,
+  jumpTo: jumpTo,
+})
 
-  jumpTo = (step: number): void => this.dispatch(actions.createJumpAction(step))
-
-  render() {
-    const history = this.state.history
-    const stepNumber = this.state.stepNumber
-    const current = history[stepNumber]
-    const xIsNext = current.xIsNext
-    const winner = calculateWinner(history)
-    const squares = selectors.getCurrentBoardFromState(this.state)
-
-    let status
-    if (winner) {
-      status = `Winner: ${winner}`
-    } else {
-      status = `Next player: ${xIsNext ? PLAYERS.X : PLAYERS.O}`
-    }
-
-    const stateProps = {
-      squares,
-      history,
-      status,
-    }
-
-    const dispatchProps = {
-      makeMove: this.makeMove,
-      jumpTo: this.jumpTo,
-    }
-
-    const gameComponentProps = {
-      ...dispatchProps,
-      ...stateProps,
-    }
-
-    return <GameComponent {...gameComponentProps} />
-  }
-}
+const mapStateToProps: (state: GameState) => StateProps = R.applySpec({
+  squares: selectors.getCurrentBoardFromState,
+  history: selectors.getHistory,
+  status: getStatus,
+})
 
 interface StateProps {
   history: History
@@ -112,3 +71,8 @@ const GameComponent: React.SFC<GameComponentProps> = ({
 const Status: React.SFC<{ status: string }> = ({ status }) => (
   <div>{status}</div>
 )
+
+export const Game: React.SFC = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(GameComponent)

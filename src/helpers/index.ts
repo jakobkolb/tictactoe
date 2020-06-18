@@ -1,7 +1,7 @@
 import { GameState, HistoryElement, Board, History, PLAYERS } from 'types'
 import * as R from 'ramda'
 import { Action } from './actions'
-import { getCurrentBoardFromHistory } from './selectors'
+import { getCurrentBoardFromHistory, getHistory, getXIsNext } from './selectors'
 import * as errors from './errors'
 
 const lines = [
@@ -31,7 +31,6 @@ export const calculateWinner = (
   }
   return null
 }
-
 const getSquareStatus: (
   state: History,
   boardIndex: number,
@@ -67,3 +66,15 @@ export const isIllegalMove: (
   errors.throwIllegalStateError,
   R.useWith(isIllegalMoveOnHistory, [R.prop('history'), R.prop('payload')]),
 )
+export const getWinner: (state: GameState) => string | null = R.pipe(
+  getHistory,
+  calculateWinner,
+)
+
+export const getStatus: (state: GameState) => string = (state) => {
+  const winner = getWinner(state)
+  if (winner) {
+    return `Winner: ${winner}`
+  }
+  return `Next player: ${getXIsNext(state) ? PLAYERS.X : PLAYERS.O}`
+}

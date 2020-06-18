@@ -8,16 +8,13 @@ import * as selectors from 'helpers/selectors'
 import * as actions from 'helpers/actions'
 import { connect } from 'react-redux'
 
-const makeMove = (dispatch: any) => (boardIndex: number): void =>
-  dispatch(actions.createClickAction(boardIndex))
+const makeMove = actions.createClickAction
+const jumpTo = actions.createJumpAction
 
-const jumpTo = (dispatch: any) => (step: number): void =>
-  dispatch(actions.createJumpAction(step))
-
-const mapDispatchToProps: (dispatch: any) => DispatchProps = R.applySpec({
-  makeMove: makeMove,
-  jumpTo: jumpTo,
-})
+const mapDispatchToProps = {
+  makeMove,
+  jumpTo,
+}
 
 const mapStateToProps: (state: GameState) => StateProps = R.applySpec({
   squares: selectors.getCurrentBoardFromState,

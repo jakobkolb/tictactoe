@@ -11,7 +11,6 @@ import { HistoryNavigation } from './History'
 
 const mapDispatchToProps = {
   makeMove: actions.createClickAction,
-  jumpTo: actions.createJumpAction,
 }
 
 const mapStateToProps: (state: GameState) => StateProps = R.applySpec({
@@ -26,13 +25,8 @@ interface StateProps {
   squares: Board
 }
 
-export interface Thunk<T> {
-  (argument: T): void
-}
-
 interface DispatchProps {
   makeMove: (boardIndex: number) => void
-  jumpTo: Thunk<number>
 }
 
 interface GameComponentProps extends StateProps, DispatchProps {}
@@ -40,7 +34,6 @@ interface GameComponentProps extends StateProps, DispatchProps {}
 const GameComponent: React.SFC<GameComponentProps> = ({
   history,
   status,
-  jumpTo,
   makeMove,
   squares,
 }) => (
@@ -51,8 +44,8 @@ const GameComponent: React.SFC<GameComponentProps> = ({
 
     <div className="game-info">
       <Status status={status} />
+      <HistoryNavigation history={history} />
     </div>
-    <HistoryNavigation history={history} jumpTo={jumpTo} />
   </div>
 )
 

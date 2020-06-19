@@ -1,26 +1,50 @@
 import React from 'react'
 import * as R from 'ramda'
-import { History } from 'types'
-import { Thunk } from './index'
+import { History, Thunk } from 'types'
+import * as actions from 'helpers/actions'
+import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
 
-const JumpToMoveButton: React.SFC<{ move: number; jumpTo: Thunk<number> }> = ({
+interface JumpToMoveButtonOwnProps {
+  move: number
+}
+
+interface JumpToMoveButtonDispatchProps {
+  onClick: Thunk<unknown>
+}
+
+interface JumpToMoveProps
+  extends JumpToMoveButtonOwnProps,
+    JumpToMoveButtonDispatchProps {}
+
+const JumpToMoveButtonComponent: React.SFC<JumpToMoveProps> = ({
   move,
-  jumpTo,
+  onClick,
 }) => (
   <li>
-    <button onClick={R.thunkify(jumpTo)(move + 1)}>{`Go to move # ${
-      move + 1
-    }`}</button>
+    <button onClick={onClick}>{`Go to move # ${move}`}</button>
   </li>
 )
+
+const mapDispatchToProps = (
+  dispatch: Dispatch,
+  { move }: JumpToMoveButtonOwnProps,
+): JumpToMoveButtonDispatchProps => ({
+  onClick: (): void => dispatch(actions.createJumpAction(move)),
+})
+
+export const JumpToMoveButton = connect(
+  undefined,
+  mapDispatchToProps,
+)(JumpToMoveButtonComponent)
+
 export const JumpToMoveButtons: React.SFC<{
   history: History
-  jumpTo: Thunk<number>
-}> = ({ jumpTo, history }) => (
+}> = ({ history }) => (
   <>
     {R.times(
-      (move: number) => (
-        <JumpToMoveButton key={move} jumpTo={jumpTo} move={move} />
+      (counter: number) => (
+        <JumpToMoveButton key={counter} move={counter + 1} />
       ),
       history.length - 1,
     )}

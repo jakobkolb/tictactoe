@@ -20,7 +20,6 @@ const mapStateToProps: (state: GameState) => StateProps = R.applySpec({
 })
 
 interface StateProps {
-  history: History
   status: string
   squares: Board
 }
@@ -32,7 +31,6 @@ interface DispatchProps {
 interface GameComponentProps extends StateProps, DispatchProps {}
 
 const GameComponent: React.SFC<GameComponentProps> = ({
-  history,
   status,
   makeMove,
   squares,
@@ -44,7 +42,7 @@ const GameComponent: React.SFC<GameComponentProps> = ({
 
     <div className="game-info">
       <Status status={status} />
-      <HistoryNavigation history={history} />
+      <HistoryNavigation />
     </div>
   </div>
 )

@@ -1,46 +1,22 @@
 import React from 'react'
 import * as R from 'ramda'
-import { History, Thunk } from 'types'
-import * as actions from 'helpers/actions'
+import { GameState, History } from 'types'
+import { JumpToMoveButton } from './JumpToMoveButton'
 import { connect } from 'react-redux'
-import { Dispatch } from 'redux'
 
-interface JumpToMoveButtonOwnProps {
-  move: number
-}
-
-interface JumpToMoveButtonDispatchProps {
-  onClick: Thunk<unknown>
-}
-
-interface JumpToMoveProps
-  extends JumpToMoveButtonOwnProps,
-    JumpToMoveButtonDispatchProps {}
-
-const JumpToMoveButtonComponent: React.SFC<JumpToMoveProps> = ({
-  move,
-  onClick,
-}) => (
-  <li>
-    <button onClick={onClick}>{`Go to move # ${move}`}</button>
-  </li>
-)
-
-const mapDispatchToProps = (
-  dispatch: Dispatch,
-  { move }: JumpToMoveButtonOwnProps,
-): JumpToMoveButtonDispatchProps => ({
-  onClick: (): void => dispatch(actions.createJumpAction(move)),
-})
-
-export const JumpToMoveButton = connect(
-  undefined,
-  mapDispatchToProps,
-)(JumpToMoveButtonComponent)
-
-export const JumpToMoveButtons: React.SFC<{
+interface JumpToMoveButtonsOwnProps {
   history: History
-}> = ({ history }) => (
+}
+
+interface JumpToMoveButtonsDispatchProps {}
+
+interface JumpToMoveButtonsProps
+  extends JumpToMoveButtonsOwnProps,
+    JumpToMoveButtonsDispatchProps {}
+
+const JumpToMoveButtonsComponent: React.SFC<JumpToMoveButtonsProps> = ({
+  history,
+}) => (
   <>
     {R.times(
       (counter: number) => (
@@ -50,3 +26,14 @@ export const JumpToMoveButtons: React.SFC<{
     )}
   </>
 )
+
+const mapStateToProps: (
+  state: GameState,
+) => JumpToMoveButtonsProps = R.applySpec<JumpToMoveButtonsProps>({
+  history: R.prop('history'),
+})
+
+export const JumpToMoveButtons = connect(
+  mapStateToProps,
+  undefined,
+)(JumpToMoveButtonsComponent)

@@ -9220,6 +9220,11 @@ redux-create-reducer@^2.0.0:
   resolved "https://registry.yarnpkg.com/redux-create-reducer/-/redux-create-reducer-2.0.0.tgz#1a88a63b567ae73ef435007c26a8cf0897e3802c"
   integrity sha512-WnTUwIKuvNWlupCRMnIi040mMqA9ALDGuUNUOSPlpz5eUP7L5AJ5/rqMXVdvOhIeQtI8ubw8nFg2zAjlrG7IIg==
 
+redux-devtools-extension@^2.13.8:
+  version "2.13.8"
+  resolved "https://registry.yarnpkg.com/redux-devtools-extension/-/redux-devtools-extension-2.13.8.tgz#37b982688626e5e4993ff87220c9bbb7cd2d96e1"
+  integrity sha512-8qlpooP2QqPtZHQZRhx3x3OP5skEV1py/zUdMY28WNAocbafxdG2tRD1MWE7sp8obGMNYuLWanhhQ7EQvT1FBg==
+
 redux@*, redux@^4.0.0, redux@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.5.tgz#4db5de5816e17891de8a80c424232d06f051d93f"

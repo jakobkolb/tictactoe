@@ -8,16 +8,13 @@ import * as selectors from 'helpers/selectors'
 import * as actions from 'helpers/actions'
 import { connect } from 'react-redux'
 
-const makeMove = (dispatch: any) => (boardIndex: number): void =>
-  dispatch(actions.createClickAction(boardIndex))
+const makeMove = actions.createClickAction
+const jumpTo = actions.createJumpAction
 
-const jumpTo = (dispatch: any) => (step: number): void =>
-  dispatch(actions.createJumpAction(step))
-
-const mapDispatchToProps: (dispatch: any) => DispatchProps = R.applySpec({
-  makeMove: makeMove,
-  jumpTo: jumpTo,
-})
+const mapDispatchToProps = {
+  makeMove,
+  jumpTo,
+}
 
 const mapStateToProps: (state: GameState) => StateProps = R.applySpec({
   squares: selectors.getCurrentBoardFromState,
@@ -31,12 +28,49 @@ interface StateProps {
   squares: Board
 }
 
+interface Thunk<T> {
+  (argument: T): void
+}
+
 interface DispatchProps {
   makeMove: (boardIndex: number) => void
-  jumpTo: (step: number) => void
+  jumpTo: Thunk<number>
 }
 
 interface GameComponentProps extends StateProps, DispatchProps {}
+
+const JumpToMoveButton: React.SFC<{ move: number; jumpTo: Thunk<number> }> = ({
+  move,
+  jumpTo,
+}) => (
+  <li>
+    <button onClick={R.thunkify(jumpTo)(move + 1)}>{`Go to move # ${
+      move + 1
+    }`}</button>
+  </li>
+)
+
+const JumpToMovesButtons: React.SFC<{
+  history: History
+  jumpTo: Thunk<number>
+}> = ({ jumpTo, history }) => (
+  <>
+    {R.times(
+      (move: number) => (
+        <JumpToMoveButton key={move} jumpTo={jumpTo} move={move} />
+      ),
+      history.length - 1,
+    )}
+  </>
+)
+
+const JumpToStartButton: React.SFC<{ jumpTo: Thunk<number> }> = ({
+  jumpTo,
+}) => (
+  <li>
+    <button onClick={R.thunkify(jumpTo)(0)}>{`Go to game start`}</button>
+  </li>
+)
 
 const GameComponent: React.SFC<GameComponentProps> = ({
   history,
@@ -44,29 +78,21 @@ const GameComponent: React.SFC<GameComponentProps> = ({
   jumpTo,
   makeMove,
   squares,
-}) => {
-  const moves = history.map((step, move) => {
-    const desc = move ? `Go to move # ${move}` : `Go to game start`
-    return (
-      <li key={move}>
-        <button onClick={R.thunkify(jumpTo)(move)}>{desc}</button>
-      </li>
-    )
-  })
-
-  return (
-    <div className="game">
-      <div className="game-board">
-        <GameBoard squares={squares} onClick={makeMove} />
-      </div>
-
-      <div className="game-info">
-        <Status status={status} />
-        <ol>{moves}</ol>
-      </div>
+}) => (
+  <div className="game">
+    <div className="game-board">
+      <GameBoard squares={squares} onClick={makeMove} />
     </div>
-  )
-}
+
+    <div className="game-info">
+      <Status status={status} />
+      <ol>
+        <JumpToStartButton jumpTo={jumpTo} />
+        <JumpToMovesButtons history={history} jumpTo={jumpTo} />
+      </ol>
+    </div>
+  </div>
+)
 
 const Status: React.SFC<{ status: string }> = ({ status }) => (
   <div>{status}</div>

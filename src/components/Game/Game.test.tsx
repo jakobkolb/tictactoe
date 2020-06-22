@@ -28,7 +28,9 @@ describe('Game', () => {
       </WithStore>,
     )
     generateClicksAt(wrapper, [1])
-    expect(wrapper.find('Status').text()).toEqual('Next player: O')
+    expect(wrapper.find('.game-info').find('.status').text()).toEqual(
+      'Next player: O',
+    )
     expect(wrapper.find('.game-info').find('button').last().text()).toEqual(
       'Go to move # 1',
     )
@@ -79,7 +81,7 @@ describe('Game', () => {
       </WithStore>,
     )
     generateClicksAt(wrapper, [0, 3, 1, 4, 2])
-    expect(wrapper.find('.game-info').find('Status').text()).toMatch(
+    expect(wrapper.find('.game-info').find('.status').text()).toMatch(
       'Winner: X',
     )
     generateClicksAt(wrapper, [5])

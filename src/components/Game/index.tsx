@@ -1,13 +1,13 @@
 import React from 'react'
 import { GameBoard } from './Board'
 import * as R from 'ramda'
-import { GameState, Board, History } from 'types'
+import { Board, GameState } from 'types'
 
-import { getStatus } from 'helpers'
 import * as selectors from 'helpers/selectors'
 import * as actions from 'helpers/actions'
 import { connect } from 'react-redux'
 import { HistoryNavigation } from './History'
+import { Status } from './Status/Status'
 
 const mapDispatchToProps = {
   makeMove: actions.createClickAction,
@@ -16,11 +16,9 @@ const mapDispatchToProps = {
 const mapStateToProps: (state: GameState) => StateProps = R.applySpec({
   squares: selectors.getCurrentBoardFromState,
   history: selectors.getHistory,
-  status: getStatus,
 })
 
 interface StateProps {
-  status: string
   squares: Board
 }
 
@@ -31,7 +29,6 @@ interface DispatchProps {
 interface GameComponentProps extends StateProps, DispatchProps {}
 
 const GameComponent: React.SFC<GameComponentProps> = ({
-  status,
   makeMove,
   squares,
 }) => (
@@ -41,14 +38,10 @@ const GameComponent: React.SFC<GameComponentProps> = ({
     </div>
 
     <div className="game-info">
-      <Status status={status} />
+      <Status />
       <HistoryNavigation />
     </div>
   </div>
-)
-
-const Status: React.SFC<{ status: string }> = ({ status }) => (
-  <div>{status}</div>
 )
 
 export const Game: React.SFC = connect(

@@ -4,19 +4,13 @@ import { GameState, History } from 'types'
 import { JumpToMoveButton } from './JumpToMoveButton'
 import { connect } from 'react-redux'
 
-interface JumpToMoveButtonsOwnProps {
+export interface StateProps {
   history: History
 }
 
-interface JumpToMoveButtonsDispatchProps {}
+type Props = StateProps
 
-interface JumpToMoveButtonsProps
-  extends JumpToMoveButtonsOwnProps,
-    JumpToMoveButtonsDispatchProps {}
-
-const JumpToMoveButtonsComponent: React.SFC<JumpToMoveButtonsProps> = ({
-  history,
-}) => (
+const JumpToMoveButtonsComponent: React.SFC<Props> = ({ history }) => (
   <>
     {R.times(
       (counter: number) => (
@@ -27,13 +21,12 @@ const JumpToMoveButtonsComponent: React.SFC<JumpToMoveButtonsProps> = ({
   </>
 )
 
-const mapStateToProps: (
-  state: GameState,
-) => JumpToMoveButtonsProps = R.applySpec<JumpToMoveButtonsProps>({
+const mapStateToProps: (state: GameState) => StateProps = R.applySpec<
+  StateProps
+>({
   history: R.prop('history'),
 })
 
-export const JumpToMoveButtons = connect(
-  mapStateToProps,
-  undefined,
-)(JumpToMoveButtonsComponent)
+export const JumpToMoveButtons = connect(mapStateToProps)(
+  JumpToMoveButtonsComponent,
+)

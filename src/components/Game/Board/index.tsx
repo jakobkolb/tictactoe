@@ -1,5 +1,5 @@
 import React from 'react'
-import { Square } from './Square'
+import { Square } from './Square/Square'
 
 export const GameBoard: React.SFC = () => {
   const renderSquare = (i: number) => {

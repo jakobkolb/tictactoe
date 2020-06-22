@@ -1,10 +1,10 @@
 import React from 'react'
 import { shallow, mount } from 'enzyme'
 import { Square } from './Square'
-import { PLAYERS } from '../../../types'
+import { PLAYERS } from '../../../../types'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
-import reducer from '../../../helpers/reducer'
+import reducer from '../../../../helpers/reducer'
 
 const WithStore: React.FC = ({ children }) => (
   <Provider store={createStore(reducer)}>{children}</Provider>

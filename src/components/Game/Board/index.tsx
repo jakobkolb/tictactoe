@@ -1,20 +1,9 @@
 import React from 'react'
 import { Square } from './Square'
-import { Board } from 'types'
 
-interface BoardProps {
-  squares: Board
-  onClick: (i: number) => void
-}
-
-export const GameBoard: React.SFC<BoardProps> = (props: BoardProps) => {
+export const GameBoard: React.SFC = () => {
   const renderSquare = (i: number) => {
-    return (
-      <Square
-        player={props.squares[i]}
-        onClick={(): void => props.onClick(i)}
-      />
-    )
+    return <Square location={i} />
   }
 
   return (

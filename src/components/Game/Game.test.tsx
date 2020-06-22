@@ -91,7 +91,7 @@ describe('Game', () => {
 
 const generateClickInGameAtSquare = R.curry(
   (game: ReactWrapper, squareIndex: number): void => {
-    game.find(GameBoard).find(Square).at(squareIndex).simulate('click')
+    game.find(GameBoard).find('.square').at(squareIndex).simulate('click')
   },
 )
 
@@ -103,4 +103,4 @@ const generateClicksAt = (
 const getTextFromGameAtSqureIndex = (
   game: ReactWrapper,
   squareIndex: number,
-): string => game.find(GameBoard).find(Square).at(squareIndex).text()
+): string => game.find(GameBoard).find('.square').at(squareIndex).text()

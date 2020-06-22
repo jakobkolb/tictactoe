@@ -1,32 +1,38 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import { mount } from 'enzyme'
+import { assert } from 'chai'
 
 import { GameBoard } from '.'
 import { Square } from './Square'
-import { PLAYERS } from 'types'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import reducer from '../../../helpers/reducer'
+
+const WithStore: React.FC = ({ children }) => (
+  <Provider store={createStore(reducer)}>{children}</Provider>
+)
 
 describe('Board', () => {
-  const squares = [
-    PLAYERS.X,
-    PLAYERS.X,
-    PLAYERS.X,
-    null,
-    PLAYERS.O,
-    PLAYERS.O,
-    null,
-    null,
-    null,
-    null,
-  ]
   test('should call callback with square id when clicked', () => {
-    const onClick = jest.fn()
-    const wrapper = shallow(<GameBoard squares={squares} onClick={onClick} />)
-    wrapper.find(Square).at(3).simulate('click')
-    expect(onClick).toHaveBeenCalledWith(3)
+    const wrapper = mount(
+      <WithStore>
+        <GameBoard />
+      </WithStore>,
+    )
+    wrapper.find('.square').at(3).simulate('click')
+    assert.equal(
+      wrapper.find('.square').at(3).text(),
+      'X',
+      'expect clicked field to be marked with X',
+    )
   })
+
   test('should render nine squares', () => {
-    const onClick = jest.fn()
-    const wrapper = shallow(<GameBoard squares={squares} onClick={onClick} />)
+    const wrapper = mount(
+      <WithStore>
+        <GameBoard />
+      </WithStore>,
+    )
     expect(wrapper.find(Square).length).toEqual(9)
   })
 })

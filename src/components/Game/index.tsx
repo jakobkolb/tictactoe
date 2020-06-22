@@ -34,7 +34,7 @@ const GameComponent: React.SFC<GameComponentProps> = ({
 }) => (
   <div className="game">
     <div className="game-board">
-      <GameBoard squares={squares} onClick={makeMove} />
+      <GameBoard />
     </div>
 
     <div className="game-info">

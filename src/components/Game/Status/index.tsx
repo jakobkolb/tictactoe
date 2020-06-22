@@ -16,4 +16,4 @@ const mapStateToProps: (state: GameState) => StatusProps = R.applySpec({
   status: getStatus,
 })
 
-export const Status = connect(mapStateToProps)(StatusComponent)
+export const Index = connect(mapStateToProps)(StatusComponent)

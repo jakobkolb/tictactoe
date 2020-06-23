@@ -14,3 +14,7 @@ export interface GameState {
   history: History
   stepNumber: number
 }
+
+export interface Thunk<T> {
+  (argument: T): void
+}

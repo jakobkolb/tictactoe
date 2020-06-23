@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow, mount, ReactWrapper } from 'enzyme'
 import { Game } from './'
 import { GameBoard } from './Board'
-import { Square } from './Board/Square'
+import { Square } from './Board/Square/Square'
 import R from 'ramda'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
@@ -28,7 +28,9 @@ describe('Game', () => {
       </WithStore>,
     )
     generateClicksAt(wrapper, [1])
-    expect(wrapper.find('Status').text()).toEqual('Next player: O')
+    expect(wrapper.find('.game-info').find('.status').text()).toEqual(
+      'Next player: O',
+    )
     expect(wrapper.find('.game-info').find('button').last().text()).toEqual(
       'Go to move # 1',
     )
@@ -79,7 +81,7 @@ describe('Game', () => {
       </WithStore>,
     )
     generateClicksAt(wrapper, [0, 3, 1, 4, 2])
-    expect(wrapper.find('.game-info').find('Status').text()).toMatch(
+    expect(wrapper.find('.game-info').find('.status').text()).toMatch(
       'Winner: X',
     )
     generateClicksAt(wrapper, [5])
@@ -89,7 +91,7 @@ describe('Game', () => {
 
 const generateClickInGameAtSquare = R.curry(
   (game: ReactWrapper, squareIndex: number): void => {
-    game.find(GameBoard).find(Square).at(squareIndex).simulate('click')
+    game.find(GameBoard).find('.square').at(squareIndex).simulate('click')
   },
 )
 
@@ -101,4 +103,4 @@ const generateClicksAt = (
 const getTextFromGameAtSqureIndex = (
   game: ReactWrapper,
   squareIndex: number,
-): string => game.find(GameBoard).find(Square).at(squareIndex).text()
+): string => game.find(GameBoard).find('.square').at(squareIndex).text()

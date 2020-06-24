@@ -1,0 +1,15 @@
+version: 1
+
+merge:
+  whitelist:
+    branches: ["master"]
+  method: squash
+  options:
+    squash:
+      title: "pull_request_title"
+      body: "pull_request_body"
+    delete_after_merge: true
+
+update:
+  whitelist:
+    branches: ["master"]

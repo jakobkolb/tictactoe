@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import reducer, { stepNumber, history, createNextSquares } from './reducer'
+import reducer from './index'
 import * as R from 'ramda'
 import {
   createInitAction,
@@ -7,8 +7,10 @@ import {
   createInvalidAction,
   createClickAction,
   Action,
-} from './actions'
+} from '../actions'
 import { PLAYERS } from 'types'
+import { stepNumber } from './stepNumber'
+import { createNextSquares, history } from './history'
 
 describe('Reducers', () => {
   test('stepNumber', () => {

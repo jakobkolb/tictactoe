@@ -1,0 +1,9 @@
+version: 1
+
+merge:
+  options:
+    delete_after_merge: true
+
+update:
+  whitelist:
+    branches: ["master"]

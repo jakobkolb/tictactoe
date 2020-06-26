@@ -3,7 +3,7 @@ export type Action = any
 
 const actions = {
   INIT: '@@INIT',
-  JUMP_TO_STEP: 'JUMP',
+  JUMP_TO_STEP: 'JUMP_TO_STEP',
   INVALID: 'INVALID',
   CLICK_ON_SQUARE: 'CLICK',
 }

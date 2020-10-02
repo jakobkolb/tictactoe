@@ -4,7 +4,7 @@
 
 A simple tic tac toe game.
 
-Following the [Into React Tutorial](https://reactjs.org/tutorial/tutorial.html).
+Initially following the [Into React Tutorial](https://reactjs.org/tutorial/tutorial.html), then heavily rewrite and refactor to improve code quality for purely educational reasons.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) including typescript according to [these guidelines](https://create-react-app.dev/docs/adding-typescript/).
 

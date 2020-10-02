@@ -3,7 +3,7 @@ A simple tic tac toe game.
 
 [![codecov](https://codecov.io/gh/hardforkio/jakobs-tictactoe/branch/master/graph/badge.svg?token=46BLV88FOM)](https://codecov.io/gh/hardforkio/jakobs-tictactoe)
 
-Following the [Into React Tutorial](https://reactjs.org/tutorial/tutorial.html).
+Initially following the [Into React Tutorial](https://reactjs.org/tutorial/tutorial.html), then heavily refactor & rewrite to improve code quality.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) including typescript according to [these guidelines](https://create-react-app.dev/docs/adding-typescript/).
 

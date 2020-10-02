@@ -13,7 +13,7 @@ test('calculateWinner', () => {
     calculateWinner(
       [
         {
-          squares: [X, X, X, null, PO, PO, null, null, null, null],
+          squares: [X, X, X, null, PO, PO, null, null, null],
           xIsNext: false,
         },
       ],
@@ -26,7 +26,20 @@ test('calculateWinner', () => {
     calculateWinner(
       [
         {
-          squares: [X, X, PO, null, PO, PO, null, X, null, null],
+          squares: [X, null, PO, null, X, PO, null, null, X],
+          xIsNext: false,
+        },
+      ],
+      { type: actions.JUMP_TO_STEP },
+    ),
+    'X',
+    'should return winner if she has three in line',
+  )
+  assert.equal(
+    calculateWinner(
+      [
+        {
+          squares: [X, X, PO, null, PO, PO, null, X, null],
           xIsNext: false,
         },
       ],

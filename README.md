@@ -1,6 +1,8 @@
 ### Tic Tac Toe
-A simple tic tac toe game.
+
 [![CircleCI](https://circleci.com/gh/jakobkolb/tictactoe.svg?style=shield)](https://app.circleci.com/pipelines/github/jakobkolb/tictactoe) [![codecov](https://codecov.io/gh/hardforkio/jakobs-tictactoe/branch/master/graph/badge.svg?token=46BLV88FOM)](https://codecov.io/gh/hardforkio/jakobs-tictactoe)
+
+A simple tic tac toe game.
 
 Following the [Into React Tutorial](https://reactjs.org/tutorial/tutorial.html).
 
